@@ -1,3 +1,4 @@
+require('dotenv').config();
 // server.js - Backend for Real-Time Issue Tracker
 const express = require('express');
 const http = require('http');
@@ -20,16 +21,44 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// GitHub Configuration - UPDATE THESE WITH YOUR REPO DETAILS
+const GITHUB_REPO_URL = process.env.GITHUB_REPO_URL || 'https://github.com/YOUR_USERNAME/YOUR_REPO.git';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || ''; // Your GitHub Personal Access Token
+const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
+
 // Initialize Git repository
 function initGitRepo() {
   try {
     execSync('git rev-parse --git-dir', { cwd: GIT_REPO_PATH, stdio: 'ignore' });
     console.log('✓ Git repository already initialized');
+    
+    // Check if remote exists
+    try {
+      execSync('git remote get-url origin', { cwd: GIT_REPO_PATH, stdio: 'ignore' });
+      console.log('✓ Remote origin already configured');
+    } catch {
+      if (GITHUB_REPO_URL !== 'https://github.com/YOUR_USERNAME/YOUR_REPO.git') {
+        // Add remote with token authentication
+        const repoWithToken = GITHUB_TOKEN 
+          ? GITHUB_REPO_URL.replace('https://', `https://${GITHUB_TOKEN}@`)
+          : GITHUB_REPO_URL;
+        execSync(`git remote add origin ${repoWithToken}`, { cwd: GIT_REPO_PATH });
+        console.log('✓ Remote origin configured');
+      }
+    }
   } catch (error) {
     console.log('Initializing Git repository...');
     execSync('git init', { cwd: GIT_REPO_PATH });
-    execSync('git config user.name "Issue Tracker"', { cwd: GIT_REPO_PATH });
-    execSync('git config user.email "tracker@example.com"', { cwd: GIT_REPO_PATH });
+    execSync('git config user.name "Issue Tracker Bot"', { cwd: GIT_REPO_PATH });
+    execSync('git config user.email "bot@issuetracker.com"', { cwd: GIT_REPO_PATH });
+    
+    if (GITHUB_REPO_URL !== 'https://github.com/YOUR_USERNAME/YOUR_REPO.git') {
+      const repoWithToken = GITHUB_TOKEN 
+        ? GITHUB_REPO_URL.replace('https://', `https://${GITHUB_TOKEN}@`)
+        : GITHUB_REPO_URL;
+      execSync(`git remote add origin ${repoWithToken}`, { cwd: GIT_REPO_PATH });
+      console.log('✓ Remote origin configured');
+    }
     console.log('✓ Git repository initialized');
   }
 }

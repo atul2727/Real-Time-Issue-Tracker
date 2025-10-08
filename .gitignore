@@ -1,35 +1,3 @@
-# Node modules
-node_modules/
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Dependency directories
-jspm_packages/
-
-# Environment variables
+echo "node_modules/
 .env
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Build / cache
-dist/
-build/
-.cache/
-
-# IDE settings
-.vscode/
-.idea/
-
-# Temporary files
-*.tmp
-*.swp
-
-# Local JSON data (optional)
-issues.json
+.DS_Store" > .gitignore
