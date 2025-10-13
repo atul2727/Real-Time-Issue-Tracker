@@ -31,12 +31,12 @@
       "githubId": 3494168958,
       "title": "sample_issue",
       "description": "sample",
-      "status": "Open",
+      "status": "Closed",
       "createdBy": "atul2727",
       "comments": [],
       "commentsCount": 0,
       "createdAt": "2025-10-08T07:10:26Z",
-      "updatedAt": "2025-10-08T07:10:26Z",
+      "updatedAt": "2025-10-13T06:09:58Z",
       "githubUrl": "https://github.com/atul2727/Real-Time-Issue-Tracker/issues/1"
     }
   ]
