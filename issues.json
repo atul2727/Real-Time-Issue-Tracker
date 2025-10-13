@@ -1,6 +1,19 @@
 {
   "issues": [
     {
+      "id": 2,
+      "githubId": 3508604035,
+      "title": "[TEST] Issue Tracker Connection Test",
+      "description": "This is a test issue created by the Issue Tracker app.\n\nIf you see this, your configuration is working! ✅\n\nYou can safely close this issue.",
+      "status": "Open",
+      "createdBy": "atul2727",
+      "comments": [],
+      "commentsCount": 0,
+      "createdAt": "2025-10-13T06:08:57Z",
+      "updatedAt": "2025-10-13T06:08:57Z",
+      "githubUrl": "https://github.com/atul2727/Real-Time-Issue-Tracker/issues/2"
+    },
+    {
       "id": 1,
       "githubId": 3494168958,
       "title": "sample_issue",
