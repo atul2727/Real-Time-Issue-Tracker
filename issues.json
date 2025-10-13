@@ -12,6 +12,15 @@
       "createdAt": "2025-10-08T07:10:26Z",
       "updatedAt": "2025-10-08T07:10:26Z",
       "githubUrl": "https://github.com/atul2727/Real-Time-Issue-Tracker/issues/1"
+    },
+    {
+      "id": 2,
+      "title": "a",
+      "description": "a",
+      "status": "Open",
+      "createdBy": "atul2727",
+      "comments": [],
+      "createdAt": "2025-10-13T06:05:13.436Z"
     }
   ]
 }
