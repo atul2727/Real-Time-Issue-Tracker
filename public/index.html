@@ -74,6 +74,9 @@
             const [selectedIssue, setSelectedIssue] = useState(null);
             const [username, setUsername] = useState('');
             const [hasUsername, setHasUsername] = useState(false);
+            const [showGitLog, setShowGitLog] = useState(false);
+            const [gitCommits, setGitCommits] = useState([]);
+            const [githubConfigured, setGithubConfigured] = useState(false);
             const wsRef = useRef(null);
 
             const [newIssue, setNewIssue] = useState({
@@ -82,6 +85,23 @@
             });
 
             const [newComment, setNewComment] = useState('');
+
+            // Fetch git log
+            const fetchGitLog = async () => {
+                try {
+                    const response = await fetch('http://localhost:3000/api/git-log');
+                    const data = await response.json();
+                    setGitCommits(data.log);
+                } catch (error) {
+                    console.error('Error fetching git log:', error);
+                }
+            };
+
+            useEffect(() => {
+                if (hasUsername) {
+                    fetchGitLog();
+                }
+            }, [hasUsername]);
 
             useEffect(() => {
                 if (!hasUsername) return;
@@ -130,7 +150,22 @@
                                 }));
                             }
                             break;
+                        
+                        case 'SYNC_UPDATE':
+                            // GitHub sync - replace all issues
+                            setIssues(data.data);
+                            if (selectedIssue) {
+                                const updated = data.data.find(i => i.id === selectedIssue.id);
+                                if (updated) {
+                                    setSelectedIssue(updated);
+                                }
+                            }
+                            console.log('Synced from GitHub');
+                            break;
                     }
+                    
+                    // Refresh git log after any update
+                    fetchGitLog();
                 };
 
                 ws.onclose = () => {
@@ -250,6 +285,13 @@
                                     >
                                         <Plus />
                                         New Issue
+                                    </button>
+                                    <button
+                                        onClick={() => setShowGitLog(true)}
+                                        className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+                                    >
+                                        <GitBranch />
+                                        Git Log
                                     </button>
                                 </div>
                             </div>
@@ -408,6 +450,61 @@
                                                 </button>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {showGitLog && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                                <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+                                    <div className="bg-gray-800 text-white p-6 flex justify-between items-center">
+                                        <div className="flex items-center gap-3">
+                                            <GitBranch />
+                                            <h2 className="text-2xl font-bold">Git Commit History</h2>
+                                        </div>
+                                        <button onClick={() => setShowGitLog(false)} className="text-white hover:text-gray-300">
+                                            <X />
+                                        </button>
+                                    </div>
+                                    
+                                    <div className="p-6 overflow-y-auto flex-1 bg-gray-50">
+                                        <div className="space-y-3 font-mono text-sm">
+                                            {gitCommits.length === 0 ? (
+                                                <div className="text-center py-8 text-gray-500">
+                                                    <p className="text-lg mb-2">No commits yet</p>
+                                                    <p className="text-sm">Create your first issue to see Git history</p>
+                                                </div>
+                                            ) : (
+                                                gitCommits.map((commit, idx) => {
+                                                    const parts = commit.split(' ');
+                                                    const hash = parts[0];
+                                                    const message = parts.slice(1).join(' ');
+                                                    
+                                                    return (
+                                                        <div key={idx} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:border-blue-300 transition-colors">
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded font-semibold text-xs">
+                                                                    {hash}
+                                                                </div>
+                                                                <div className="flex-1">
+                                                                    <p className="text-gray-800">{message}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="bg-gray-100 p-4 border-t border-gray-200">
+                                        <button
+                                            onClick={fetchGitLog}
+                                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                        >
+                                            Refresh Git Log
+                                        </button>
                                     </div>
                                 </div>
                             </div>
