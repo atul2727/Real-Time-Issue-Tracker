@@ -1,6 +1,19 @@
 {
   "issues": [
     {
+      "id": 3,
+      "githubId": 3508606365,
+      "title": "a",
+      "description": "a\n\n---\n*Created by: Atul via Issue Tracker*",
+      "status": "Open",
+      "createdBy": "atul2727",
+      "comments": [],
+      "commentsCount": 0,
+      "createdAt": "2025-10-13T06:09:43Z",
+      "updatedAt": "2025-10-13T06:09:43Z",
+      "githubUrl": "https://github.com/atul2727/Real-Time-Issue-Tracker/issues/3"
+    },
+    {
       "id": 2,
       "githubId": 3508604035,
       "title": "[TEST] Issue Tracker Connection Test",
